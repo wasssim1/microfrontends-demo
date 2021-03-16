@@ -1,3 +1,5 @@
+echo "! TODO: Not yet implemented... !"
+
 declare -a apps=("app-root" "app-first" "app-second")
 
 for app in "${apps[@]}"; do
@@ -6,7 +8,7 @@ for app in "${apps[@]}"; do
     echo "MicroApp not existing!"
   else
     cd ${app}
-    npm start &
+#    npm start &
     cd ..
   fi
   echo "############"

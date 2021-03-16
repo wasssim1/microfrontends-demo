@@ -4,6 +4,9 @@ const MicroReact = (props) => {
     const {history, name, host, document, window} = props;
 
     useEffect(() => {
+        const toRemove = document.getElementById(`error-container`);
+        toRemove && document.head.removeChild(toRemove);
+
         const scriptId = `micro-frontend-script-${name}`;
 
         if (document.getElementById(scriptId)) {

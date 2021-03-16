@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+#  mfe-reverse-proxy:
+#    container_name: mfe-reverse-proxy
+#    hostname: reverse-proxy
+#    image: nginx
+#    ports:
+#      - 80:80
+#      - 443:443
+#    volumes:
+#      - nginx/reverse-proxy.conf:/etc/nginx/conf.d
+  mfe-app-root:
+    build: ./app-root
+    image: mfe-app-root:latest
+    ports:
+      - 3000:80
+  mfe-app-first:
+    build: ./app-first
+    image: mfe-app-first:latest
+    ports:
+      - 3001:80
+  mfe-app-second:
+    build: ./app-second
+    image: mfe-app-second:latest
+    ports:
+      - 3002:80
