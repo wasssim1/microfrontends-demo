@@ -2,6 +2,7 @@ import React from "react";
 import './App.css';
 import {Redirect, Route, Router} from "react-router-dom";
 import {createBrowserHistory} from 'history';
+import {StatefulComponent} from "./StatefulComponent";
 
 function App(props) {
     const {history} = props;
@@ -10,7 +11,7 @@ function App(props) {
     return (
         <div className="AppFirst">
             <Router history={history || defaultHistory}>
-                <Route exact path="/first" render={() => <div>Test First App</div>}/>
+                <Route exact path="/first" component={StatefulComponent}/>
                 <Redirect from="/" to="/first"/>
             </Router>
         </div>

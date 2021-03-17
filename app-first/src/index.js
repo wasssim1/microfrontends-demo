@@ -11,5 +11,8 @@ window.renderFirstApp = (containerId, history) => {
 };
 
 window.unmountFirstApp = (containerId) => {
-    ReactDOM.unmountComponentAtNode(document.getElementById(containerId));
+    let elementById = document.getElementById(containerId);//never found...call from useEffect() result is too late
+    if (elementById) {
+        ReactDOM.unmountComponentAtNode(elementById);
+    }
 };

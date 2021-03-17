@@ -1,5 +1,7 @@
 # microfrontends-demo
 
+Follows the javascript-integration idea from https://martinfowler.com/articles/micro-frontends.html#TheExampleInDetail
+
 In the project's root, type:
 
 ```

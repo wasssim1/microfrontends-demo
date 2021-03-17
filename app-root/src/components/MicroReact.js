@@ -15,32 +15,42 @@ const MicroReact = (props) => {
             return;
         }
 
-        fetch(`${host}/asset-manifest.json`)
+        fetch(`${host}/asset-manifest.json`, )
             .then(res => res.json())
             .then(manifest => {
-                console.debug(manifest)
-                const script = document.createElement('script');
-                script.id = scriptId;
-                script.src = `${host}/${manifest['entrypoints'][1]}`;
-                script.onload = renderMicroFrontend;
-                document.head.appendChild(script);
-
-                const styleLink = document.createElement('link');
-                styleLink.href = `${host}/${manifest['entrypoints'][0]}`;
-                styleLink.rel = 'stylesheet';
-                document.head.appendChild(styleLink);
-
+                console.log(manifest)
+                manifest['entrypoints'].forEach((asset, i) => {
+                   if (asset.includes("/js/")) {
+                       const script = document.createElement('script');
+                       script.id = `${scriptId}_${i}`;
+                       script.src = `${host}/${asset}`;
+                       if (('/' + asset) === manifest['files']['main.js']) {
+                           script.onload = renderMicroFrontend;
+                       }
+                       document.head.appendChild(script);
+                   }
+                   else if (asset.includes("/css/")) {
+                       const styleLink = document.createElement('link');
+                       styleLink.href = `${host}/${asset}`;
+                       styleLink.rel = 'stylesheet';
+                       document.head.appendChild(styleLink);
+                   }
+                });
             })
             .catch((err) => {
-                try {
-                    const script = document.createElement('script');
-                    script.id = scriptId;
-                    script.src = `${host}/static/js/bundle.js`;
-                    script.onload = renderMicroFrontend;
-                    document.head.appendChild(script);
-                } catch (e) {
-                    window.renderMicroFrontendError(name, err);
+                //fallback to IFrame integration
+                let appRootDiv = document.getElementById(`${name}-container`);
+                let iframe = appRootDiv.getElementsByTagName('iframe');
+                if (iframe.length === 0) {
+                    iframe = document.createElement('iframe');
                 }
+                else {
+                    iframe = iframe[0];
+                }
+                iframe.src = host;
+                iframe.style = "width:100%; height:500px";
+                appRootDiv.appendChild(iframe);
+                //window.renderMicroFrontendError(name, err);
             });
 
     }, [document]);
