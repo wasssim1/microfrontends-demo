@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import AppHeader from "./components/AppHeader";
-import MicroReact from "./components/MicroReact";
+import MicroPlainHtml from "./components/MicroPlainHtml";
+import MicroWebpack from "./components/MicroWebpack";
 
 const {
     REACT_APP_FIRST_APP_HOST: firstAppHost,
@@ -12,28 +13,28 @@ const {
 const FirstApp = (props) => {
     const {history} = props;
     return (
-        <MicroReact history={history} host="http://localhost:3001" name="FirstApp"/>
+        <MicroWebpack history={history} host="http://localhost:3001" name="FirstApp"/>
     )
 };
 
 const SecondApp = (props) => {
     const {history} = props;
     return (
-        <MicroReact history={history} host="http://localhost:3002" name="SecondApp"/>
+        <MicroWebpack history={history} host="http://localhost:3002" name="SecondApp"/>
     )
 };
 
 const ThirdApp = (props) => {
     const {history} = props;
     return (
-        <MicroReact history={history} host="http://dev-contacts-ui.bvo.local" name="ThirdApp"/>
+        <MicroPlainHtml history={history} host="http://dev-contacts-ui.bvo.local" name="ThirdApp"/>
     )
 };
 
 const FourthApp = (props) => {
     const {history} = props;
     return (
-        <MicroReact history={history} host="http://dev-dashboard.bvo.local" name="Dashboard"/>
+        <MicroPlainHtml history={history} host="http://dev-dashboard.bvo.local" name="Dashboard"/>
     )
 };
 

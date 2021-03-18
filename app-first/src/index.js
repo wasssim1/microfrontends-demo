@@ -13,6 +13,11 @@ window.renderFirstApp = (containerId, history) => {
 window.unmountFirstApp = (containerId) => {
     let elementById = document.getElementById(containerId);//never found...call from useEffect() result is too late
     if (elementById) {
+        console.log("START UNMOUNT FROM", containerId)
         ReactDOM.unmountComponentAtNode(elementById);
+        console.log("FINISHED UNMOUNT FROM", containerId)
+    }
+    else {
+        alert('CANT UNMOUNT FROM ' + containerId);
     }
 };

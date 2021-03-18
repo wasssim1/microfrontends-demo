@@ -5,6 +5,7 @@ Not the generell idea but only to the current state of the github source code.
 but it's okay to hard-code the host="http://localhost:3001" and host="http://localhost:3002" in App.js from the root.
 
 - unmount micro-app in the useEffect() result can't work, because the "div" element created from "<MicroReact/>" dont exists anymore in DOM at the time of calling this function (all dom changes already applied from react).
+**FIXED** by implementing the MicroWebpack component as Class-Component and umount from componentWillUnmount() (called **before** removed from DOM)
 
 - a little bit messy CORS configuration in nginx ;)
 
