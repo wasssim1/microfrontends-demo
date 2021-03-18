@@ -15,6 +15,12 @@ const AppHeader = (props) => {
                     <li>
                         <NavLink to="/second">Second App</NavLink>
                     </li>
+                    <li>
+                        <NavLink to="/third">Third App</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/fourth">Fourth App</NavLink>
+                    </li>
                 </ul>
             </nav>
         </header>
