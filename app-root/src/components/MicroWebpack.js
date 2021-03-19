@@ -29,20 +29,24 @@ class MicroWebpack extends React.Component {
 							const script = document.createElement('script');
 							script.id = `${this.scriptId}_${i}`;
 							script.src = `${this.props.host}/${asset}`;
-							if (('/' + asset) === manifest['files']['main.js']) {
+							if (manifest['files']['main.js'].endsWith(asset)) {
+								console.log(`Found Entrypoint for ${this.props.name}`)
 								script.onload = this.renderMicroFrontend;
 							}
+							console.log(`Loading App-Javascript-Asset `, script)
 							document.head.appendChild(script);
 						}
 						else if (asset.includes("/css/")) {
 							const styleLink = document.createElement('link');
 							styleLink.href = `${this.props.host}/${asset}`;
 							styleLink.rel = 'stylesheet';
+							console.log(`Loading App-CSS-Asset `, styleLink)
 							document.head.appendChild(styleLink);
 						}
 					});
 				})
 				.catch((err) => {
+					console.log(err);
 					//fallback to IFrame integration
 					let appRootDiv = document.getElementById(`${this.props.name}-container`);
 					let iframe = appRootDiv.getElementsByTagName('iframe');
@@ -73,10 +77,11 @@ class MicroWebpack extends React.Component {
 
 	renderMicroFrontend() {
 		console.log(`renderMicroFrontend ${this.props.name}`);
-		if (window[`render${this.props.name}`]) {
-			window[`render${this.props.name}`](`${this.props.name}-container`, this.props.history);
+		let entrypointName = `render${this.props.name}`;
+		if (window[entrypointName]) {
+			window[entrypointName](`${this.props.name}-container`, this.props.history);
 		} else {
-			window.renderMicroFrontendError(this.props.name);
+			window.renderMicroFrontendError(this.props.name, `global ${entrypointName} function dont exists in window`);
 		}
 	}
 

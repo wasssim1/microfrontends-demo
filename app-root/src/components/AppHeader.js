@@ -10,16 +10,16 @@ const AppHeader = (props) => {
             <nav>
                 <ul>
                     <li>
-                        <NavLink to="/first">First App</NavLink>
+                        <NavLink to="/app1">React-App1</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/second">Second App</NavLink>
+                        <NavLink to="/app2">React-App2</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/third">Third App</NavLink>
+                        <NavLink to="/third">IFrame-App1</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/fourth">Fourth App</NavLink>
+                        <NavLink to="/fourth">IFrame-App2</NavLink>
                     </li>
                 </ul>
             </nav>

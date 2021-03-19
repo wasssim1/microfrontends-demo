@@ -27,15 +27,9 @@ It will also help later to override the **webpack config** without *ejecting* (t
 This way works fine for the **MicroReactApps**, and it should be also for the **MicroAngularApps** since both (React and Angular) uses the same module bundler (**webpack**). 
 
 ### TODOs
-* Customize js-bundles for MicroReactApps
-  - with trying to avoid ``npm run eject``
-  - through ``react-app-rewired`` module
-  - through webpack config (output)
 * Angular
   - find out how to handle webpack config
   - find an entrypoint (equiv. ``asset-manifest.json`` in react)
-* Router
-  - Add Routing handler (try first ``nginx reverse-proxy``)
 * PWA
   - add service workers to manage cashing ++
 
@@ -45,3 +39,11 @@ This way works fine for the **MicroReactApps**, and it should be also for the **
 * Decide whether split MicroApps by **Apps** or **Components** or **...**
 * Try nested PWA (PWAs inside PWA)
 * Global styles sharing
+
+
+### Javascript-Frontend Requirements (currently)
+
+- Each frontend needs to run below a unique sub-directory path like /app1.
+- accessible /app1/asset-manifest.json webpack bundler manifest 
+- static resources needs to be placed below /app1/static (default for create-react-app)
+- global (window)functions "render$NAME" and "unmount$NAME" as the contract between portal and micro-frontend.
