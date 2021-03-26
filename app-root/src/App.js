@@ -11,28 +11,28 @@ import {themeBarmenia} from "@onesty-tech/bvo-theme-react";
 const App1 = (props) => {
 	const {history} = props;
 	return (
-			<MicroWebpack history={history} host="http://localhost:3001/app1" name="FirstApp"/>
+			<MicroWebpack history={history} host="http://app1.localhost/app1" name="FirstApp"/>
 	)
 };
 
 const App2 = (props) => {
 	const {history} = props;
 	return (
-			<MicroWebpack history={history} host="http://localhost:3002/app2" name="SecondApp"/>
+			<MicroWebpack history={history} host="http://app2.localhost/app2" name="SecondApp"/>
 	)
 };
 
 const App3 = (props) => {
 	const {history} = props;
 	return (
-			<MicroPlainHtml history={history} host="http://localhost:3001/app1" name="IFrameApp1"/>
+			<MicroPlainHtml history={history} host="http://app1.localhost/app1" name="IFrameApp1"/>
 	)
 };
 
 const App4 = (props) => {
 	const {history} = props;
 	return (
-			<MicroPlainHtml history={history} host="http://localhost:3002/app2" name="IFrameApp2"/>
+			<MicroPlainHtml history={history} host="http://app2.localhost/app2" name="IFrameApp2"/>
 	)
 };
 

@@ -60,7 +60,11 @@ if ('serviceWorker' in navigator) {
 				if (serviceWorker) {
 					//logState(serviceWorker.state);
 					serviceWorker.addEventListener('statechange', function (e) {
-						//logState(e.target.state);
+						logState(e.target.state);
+						if (e.target.state === 'activated') {
+							console.log("Reload page cause new ServiceWorker was installed and activated!")
+							window.location.reload();
+						}
 					});
 				}
 			}).catch(function (error) {

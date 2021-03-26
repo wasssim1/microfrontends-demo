@@ -2,7 +2,14 @@
 
 Follows the javascript-integration idea from https://martinfowler.com/articles/micro-frontends.html#TheExampleInDetail
 
-In the project's root, type:
+**add the following to your hosts file /etc/hosts**
+````
+#you can use 127.0.0.1 or your LAN IP.
+127.0.0.1     portal.localhost app1.localhost app2.localhost
+````
+_Without the domain "localhost" a service-worker will not work until "ssl" was used. And for development we can't/won't use ssl._
+
+Then in the project's root, type:
 
 ```
   $ docker-compose up
