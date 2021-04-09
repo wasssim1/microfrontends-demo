@@ -5,7 +5,10 @@ class MicroWebpack extends React.Component {
 
 	static propTypes = {
 		name: PropTypes.string.isRequired,
-		host: PropTypes.string.isRequired
+		host: PropTypes.string.isRequired,
+		mountFunc: PropTypes.string.isRequired,
+		unmountFunc: PropTypes.string.isRequired,
+		jsConfigUrl: PropTypes.string,
 	};
 
 	static defaultProps = {
@@ -16,10 +19,18 @@ class MicroWebpack extends React.Component {
 	constructor(props) {
 		super(props);
 		this.scriptId = `micro-frontend-script-${this.props.name}`;
+		this.state = {mountRetryErrors: 0}
 		this.renderMicroFrontend = this.renderMicroFrontend.bind(this);
 	}
 
 	componentDidMount() {
+		if (this.props.jsConfigUrl) {
+			const script = document.createElement('script');
+			script.id = `${this.props.name}_config`;
+			script.src = this.props.jsConfigUrl;
+			console.log(`Loading App-Javascript-Config `, script)
+			document.head.appendChild(script);
+		}
 		fetch(`${this.props.host}/asset-manifest.json`, )
 				.then(res => res.json())
 				.then(manifest => {
@@ -28,13 +39,19 @@ class MicroWebpack extends React.Component {
 						if (asset.includes("/js/")) {
 							const script = document.createElement('script');
 							script.id = `${this.scriptId}_${i}`;
-							script.src = `${this.props.host}/${asset}`;
-							if (manifest['files']['main.js'].endsWith(asset)) {
-								console.log(`Found Entrypoint for ${this.props.name}`)
-								script.onload = this.renderMicroFrontend;
+							let elementById = document.getElementById(script.id);
+							if (!elementById) {
+								script.src = `${this.props.host}/${asset}`;
+								if (manifest['files']['main.js'].endsWith(asset)) {
+									console.log(`Found Entrypoint for ${this.props.name}`)
+									script.onload = this.renderMicroFrontend;
+								}
+								console.log(`Loading App-Javascript-Asset `, script)
+								document.head.appendChild(script);
 							}
-							console.log(`Loading App-Javascript-Asset `, script)
-							document.head.appendChild(script);
+							else {
+								this.renderMicroFrontend();
+							}
 						}
 						else if (asset.includes("/css/")) {
 							const styleLink = document.createElement('link');
@@ -63,11 +80,11 @@ class MicroWebpack extends React.Component {
 	}
 
 	componentWillUnmount() {
-		if (window[`unmount${this.props.name}`]) {
+		if (window[`${this.props.unmountFunc}`]) {
 			//TODO: decide wether we remove <script> or keep it for faster next load; if yes we find out how?
 			// const toRemove = document.getElementById(`micro-frontend-script-${name}`);
 			// toRemove && document.head.removeChild(toRemove);
-			window[`unmount${this.props.name}`](`${this.props.name}-container`);
+			window[`${this.props.unmountFunc}`](`${this.props.name}-container`);
 		} else {
 			const errorDiv = document.getElementById('error-container');
 			const rootDiv = document.getElementById('root');
@@ -76,12 +93,20 @@ class MicroWebpack extends React.Component {
 	}
 
 	renderMicroFrontend() {
-		console.log(`renderMicroFrontend ${this.props.name}`);
-		let entrypointName = `render${this.props.name}`;
+		let entrypointName = `${this.props.mountFunc}`;
 		if (window[entrypointName]) {
+			console.log(`mount Frontend ${this.props.name}`, entrypointName);
 			window[entrypointName](`${this.props.name}-container`, this.props.history);
 		} else {
-			window.renderMicroFrontendError(this.props.name, `global ${entrypointName} function dont exists in window`);
+			if (this.state.mountRetryErrors < 5) {
+				this.state.mountRetryErrors++;
+				console.log("retry search for mount-Function", entrypointName);
+				setTimeout(this.renderMicroFrontend, 100);
+			}
+			else {
+				console.error(`mount-Function for Frontend ${this.props.name} not found`, entrypointName);
+				window.renderMicroFrontendError(this.props.name, `global ${entrypointName} function dont exists in window`);
+			}
 		}
 	}
 

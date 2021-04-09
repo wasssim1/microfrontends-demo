@@ -21,7 +21,7 @@ export const StatefulComponent = ({id}) => {
 		<Link to={'/app2'}>Goto /app2</Link><br/>
 		<Link to={'/app1/details/1'}>Goto /app1/details/1</Link><br/>
 		<Link to={'/app1/details/2'}>Goto /app1/details/2</Link><br/>
-		<Link to={'/details/1'}>Goto /details/1</Link> -> don't work inside portal<br/>
-		<Link to={'/details/2'}>Goto /details/2</Link> -> don't work inside portal<br/>
+		<Link to={'/contacts/insurer/5ef9a549ccd6693970413d65'}>Deep-Link into Contacts-SPA</Link><br/>
+		<Link to={'/app6/insurer/5ef9a549ccd6693970413d65'}>Deep-Link into Contacts-IFrame</Link><br/>
 	</React.Fragment>
 }

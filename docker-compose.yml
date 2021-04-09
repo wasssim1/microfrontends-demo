@@ -1,5 +1,13 @@
 version: '3.7'
 
+x-common-variables: &common-variables
+    KEYCLOAK_AUTH_SERVER_URL: https://sso.onesty-tech.de/auth
+    KEYCLOAK_URL: https://sso.onesty-tech.de/auth
+    KEYCLOAK_REALM: Barmenia-Develop
+    NEWSAPP_ENDPOINT_URL: https://bvo-news-test.onesty-tech.de
+    INTENTUS_ENDPOINT_URL: https://bvo-intentus-test.onesty-tech.de
+    INTENTUS_LINK_URL: https://bvo-intentus-test.onesty-tech.de
+
 services:
   #reverse proxy for portal and apps (can be combined with portal for non-development use-case)
   proxy:
@@ -30,3 +38,35 @@ services:
   app2:
     build: ./app-second
     image: app2:latest
+
+  dashboard:
+    image: nexus-docker.onesty-tech.de/bvo-dashboard:1
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENT_ID: BVO_Dashboard
+      KEYCLOAK_CLIENT_SECRET: 9b439904-4767-4884-90ac-c5109d682f91
+
+  newsapp:
+    image: nexus-docker.onesty-tech.de/bvo-news-app:next-gen
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENT_ID: BVO_Newsapp
+      KEYCLOAK_CLIENT_SECRET: 19433ec3-36dd-453e-9c25-0b5395d0d9f9
+      MONGODB_HOST: mongodb
+
+  mongodb:
+    image: mongo
+
+  contacts-ui:
+    image: nexus-docker.onesty-tech.de/bvo-contacts-ui:next-gen
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENTID: BVO_WebpartsReact
+      REST_API_CONTACTS: https://bvo-contacts-test.onesty-tech.de
+
+  contacts-ui2:
+    image: nexus-docker.onesty-tech.de/bvo-contacts-ui:latest
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENTID: BVO_WebpartsReact
+      REST_API_CONTACTS: https://bvo-contacts-test.onesty-tech.de

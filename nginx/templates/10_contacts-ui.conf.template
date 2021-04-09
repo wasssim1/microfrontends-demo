@@ -1,0 +1,8 @@
+server {
+	resolver 127.0.0.11 valid=10s;
+	server_name contacts-ui.bvo.localhost;
+	location / {
+		set $backend_server contacts-ui;
+		proxy_pass http://$backend_server:3000;
+	}
+}
