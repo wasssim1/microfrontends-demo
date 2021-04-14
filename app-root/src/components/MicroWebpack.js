@@ -19,7 +19,7 @@ class MicroWebpack extends React.Component {
 	constructor(props) {
 		super(props);
 		this.scriptId = `micro-frontend-script-${this.props.name}`;
-		this.state = {mountRetryErrors: 0}
+		this.state = {mountRetryErrors: 0, loadedStyles: [], loadedScripts: []};
 		this.renderMicroFrontend = this.renderMicroFrontend.bind(this);
 	}
 
@@ -30,35 +30,41 @@ class MicroWebpack extends React.Component {
 			script.src = this.props.jsConfigUrl;
 			console.log(`Loading App-Javascript-Config `, script)
 			document.head.appendChild(script);
+			this.state.loadedScripts.push(`${this.props.name}_config`);
 		}
-		fetch(`${this.props.host}/asset-manifest.json`, )
+		fetch(`${this.props.host}/asset-manifest.json`)
 				.then(res => res.json())
 				.then(manifest => {
 					console.log(manifest)
 					manifest['entrypoints'].forEach((asset, i) => {
+						let assetUrl = `${this.props.host}/${asset}`;
 						if (asset.includes("/js/")) {
 							const script = document.createElement('script');
-							script.id = `${this.scriptId}_${i}`;
-							let elementById = document.getElementById(script.id);
-							if (!elementById) {
-								script.src = `${this.props.host}/${asset}`;
-								if (manifest['files']['main.js'].endsWith(asset)) {
-									console.log(`Found Entrypoint for ${this.props.name}`)
-									script.onload = this.renderMicroFrontend;
-								}
+							script.id = assetUrl;
+							script.src = assetUrl;
+							if (manifest['files']['main.js'].endsWith(asset)) {
+								script.onload = this.renderMicroFrontend;
+							}
+							if (!document.getElementById(assetUrl)) {
 								console.log(`Loading App-Javascript-Asset `, script)
 								document.head.appendChild(script);
+								this.state.loadedScripts.push(assetUrl);
 							}
-							else {
+							else if (script.onload) {
+								console.log(`Start Render App`, script)
 								this.renderMicroFrontend();
 							}
 						}
 						else if (asset.includes("/css/")) {
 							const styleLink = document.createElement('link');
-							styleLink.href = `${this.props.host}/${asset}`;
+							styleLink.id = assetUrl;
+							styleLink.href = assetUrl;
 							styleLink.rel = 'stylesheet';
-							console.log(`Loading App-CSS-Asset `, styleLink)
-							document.head.appendChild(styleLink);
+							if (!document.getElementById(assetUrl)) {
+								console.log(`Loading App-CSS-Asset `, styleLink)
+								document.head.appendChild(styleLink);
+								this.state.loadedStyles.push(assetUrl);
+							}
 						}
 					});
 				})
@@ -85,6 +91,10 @@ class MicroWebpack extends React.Component {
 			// const toRemove = document.getElementById(`micro-frontend-script-${name}`);
 			// toRemove && document.head.removeChild(toRemove);
 			window[`${this.props.unmountFunc}`](`${this.props.name}-container`);
+			this.state.loadedStyles.forEach(file => document.head.removeChild(document.getElementById(file)));
+			this.state.loadedStyles = [];
+			this.state.loadedScripts.forEach(file => document.head.removeChild(document.getElementById(file)));
+			this.state.loadedScripts = [];
 		} else {
 			const errorDiv = document.getElementById('error-container');
 			const rootDiv = document.getElementById('root');
