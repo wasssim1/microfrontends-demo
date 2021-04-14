@@ -1,6 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {makeStyles} from "@material-ui/styles";
-import {Container, Grid, useMediaQuery} from "@material-ui/core";
+import {Container} from "@material-ui/core";
+import {useWebpackIFrame} from "./hooks/useWebpackIFrame";
 import {useLocation} from "react-router";
 
 //TODO: read and understand https://www.benmarshall.me/responsive-iframes/
@@ -31,27 +32,21 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-//TODO: Find a way (Should ne simple)
-const MicroPlainHtml = (props) => {
-	const {name, url, mount_path} = props;
+const WebpackIFrameApp = (props) => {
+	const { url , name, mount_path, mountFunc, jsConfigUrl, history} = props;
 	const styles = useStyles();
-	let location = useLocation();
-	const iFrameRef = useRef(null);
+	const iFrameElement = useWebpackIFrame({url , name, mount_path, mountFunc, jsConfigUrl, history});
 	const containerID = name + "-container";
-	const [ iframeUrl, setIFrameUrl ] = useState(url);
-	useEffect(() => {
-		setIFrameUrl(url + location.pathname.replace(mount_path, ""));
-	}, [location])
 	return (
 			<Container maxWidth="sm" className={styles.root} id={containerID}>
-				<iframe ref={iFrameRef} title={name} src={iframeUrl}/>
+				{iFrameElement.iFrame}
 			</Container>
 	)
 };
 
-MicroPlainHtml.defaultProps = {
+WebpackIFrameApp.defaultProps = {
 	document,
 	window,
 };
 
-export default MicroPlainHtml;
+export default WebpackIFrameApp;

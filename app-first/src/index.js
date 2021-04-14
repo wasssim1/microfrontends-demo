@@ -23,3 +23,9 @@ window.unmountFirstApp = (containerId) => {
         alert('CANT UNMOUNT FROM ' + containerId);
     }
 };
+
+//TODO: remove this TEST ONLY code, it shows the "unloading" problem from the webpack/javascript integration solution
+(function (win, doc) {
+    let timerID = setInterval(() => console.log("INTERVAL TIMER from app1"), 5000);
+    setTimeout(() => clearInterval(timerID), 60000);
+})(window, document);

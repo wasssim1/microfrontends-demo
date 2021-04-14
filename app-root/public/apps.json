@@ -1,14 +1,22 @@
 [
   {
-    "name": "App1",
+    "name": "App1-webpack",
     "host": "http://app1.bvo.localhost/app1",
-    "target_path": "/app1",
+    "target_path": "/app1X",
     "mountFunc": "renderFirstApp",
     "unmountFunc": "unmountFirstApp",
     "type": "webpack"
   },
   {
-    "name": "App2",
+    "name": "App1-WebpackIFrame",
+    "host": "http://app1.bvo.localhost/app1",
+    "target_path": "/app1",
+    "mountFunc": "renderFirstApp",
+    "unmountFunc": "unmountFirstApp",
+    "type": "webpackiframe"
+  },
+  {
+    "name": "App2-SPA",
     "host": "http://app2.bvo.localhost/app2",
     "mountFunc": "renderSecondApp",
     "unmountFunc": "unmountSecondApp",
@@ -16,26 +24,26 @@
     "type": "webpack"
   },
   {
-    "name": "IFrameApp1",
+    "name": "App1-IFrame",
     "host": "http://app1.bvo.localhost/app1",
     "target_path": "/app3",
     "type": "iframe"
   },
   {
-    "name": "IFrameApp2",
+    "name": "App2-IFrame",
     "host": "http://app2.bvo.localhost/app2",
     "target_path": "/app4",
     "type": "iframe"
   },
   {
     "name": "Dashboard",
-    "host": "http://dashboard.bvo.localhost",
+    "host": "http://dashboard.bvo.localhost/",
     "target_path": "/app5",
     "type": "iframe"
   },
   {
-    "name": "News-App",
-    "host": "http://newsapp.bvo.localhost",
+    "name": "NewsApp",
+    "host": "http://newsapp.bvo.localhost/",
     "target_path": "/newsapp",
     "type": "iframe"
   },
@@ -52,10 +60,27 @@
     "type": "iframe"
   },
   {
-    "name": "ContactsUI-SPA",
+    "name": "ContactsUI Webpack",
     "host": "http://contacts-ui.bvo.localhost/contacts",
     "jsConfigUrl": "http://contacts-ui.bvo.localhost/config.js",
     "target_path": "/contacts",
+    "mountFunc": "mountCompanyContacts",
+    "unmountFunc": "unmountCompanyContacts",
+    "type": "webpack"
+  },
+  {
+    "name": "ContactsUI WebpackIFrame",
+    "host": "http://contacts-ui.bvo.localhost/contacts",
+    "jsConfigUrl": "http://contacts-ui.bvo.localhost/config.js",
+    "target_path": "/contacts3",
+    "mountFunc": "mountCompanyContacts",
+    "type": "webpackiframe"
+  },
+  {
+    "name": "ContactsUI Webpack(css)",
+    "host": "http://contacts-ui.bvo.localhost/contacts",
+    "jsConfigUrl": "http://contacts-ui.bvo.localhost/config.js",
+    "target_path": "/contacts2",
     "mountFunc": "mountCompanyContacts",
     "unmountFunc": "unmountCompanyContacts",
     "type": "webpack"
