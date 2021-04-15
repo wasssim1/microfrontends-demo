@@ -15,6 +15,7 @@ export const useWebpackIFrame = ({url , name, mount_path, mountFunc, jsConfigUrl
 						event.target.contentWindow.window[mountFunc]('root', history);
 					}, 500)
 			)
+			.then(assets => console.log("Loaded assets", assets));
 		}
 		catch (e) {
 			//ignore cross-origin frame content
@@ -26,7 +27,7 @@ export const useWebpackIFrame = ({url , name, mount_path, mountFunc, jsConfigUrl
 		title: name,
 		origin: window.origin,
 		src: mount_path + location.hash,
-		//sandbox: "allow-same-origin allow-scripts",
+		sandbox: "allow-forms allow-same-origin allow-scripts allow-top-navigation",
 		srcDoc: `<html><head><title>${name}</title></head><body><div id="root"></div></body></html>`,
 		onLoad: loadWebpackSources
 	});
