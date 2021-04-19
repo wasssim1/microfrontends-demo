@@ -1,60 +1,50 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import AppHeader from "./components/AppHeader";
-import MicroPlainHtml from "./components/MicroPlainHtml";
-import MicroWebpack from "./components/MicroWebpack";
+import {CssBaseline, Grid} from "@material-ui/core";
+import {ThemeProvider} from '@material-ui/core/styles';
+import {themeBarmenia} from "@onesty-tech/bvo-theme-react";
+import {AppRoute} from "./components/AppRoute";
+import {receiveMessage} from "./components/MessageHandler";
 
-const {
-    REACT_APP_FIRST_APP_HOST: firstAppHost,
-    REACT_APP_SECOND_APP_HOST: secondAppHost,
-} = process.env;//don't work for dockerized/production builds...need to use nginx-templates-env-vars to override
+function App(props) {
+	const [apps, setApps] = useState([]);
+	useEffect(() => {
+		fetch("/apps.json").then(res => res.json()).then(json => setApps(json));
+		window.addEventListener('message', receiveMessage, false);
+		return () => {
+			window.removeEventListener("message", receiveMessage);
+		}
+	}, []);
+	return (
+			<BrowserRouter>
+				<ThemeProvider theme={themeBarmenia}>
+					<CssBaseline/>
+					<div className="AppRoot">
+						<AppHeader/>
+						<hr/>
+						<Grid container>
+							<Grid item xm={2}>
 
-const FirstApp = (props) => {
-    const {history} = props;
-    return (
-        <MicroWebpack history={history} host="http://localhost:3001" name="FirstApp"/>
-    )
-};
+							</Grid>
+							<Grid item xs={12} xm={10}>
+								<Switch>
+									<Route exact path="/" render={() => <div>Welcome to the NextGen Portal</div>}/>
+									{apps.map((app, i) => <AppRoute key={i} path={app.target_path} app={app}/>)}
+									<Route path={"*"} render={(p) =>
+											<div><strong>Unknown APP route...there is no App at {p.match.url}</strong></div>}/>
+								</Switch>
+							</Grid>
+						</Grid>
 
-const SecondApp = (props) => {
-    const {history} = props;
-    return (
-        <MicroWebpack history={history} host="http://localhost:3002" name="SecondApp"/>
-    )
-};
+						<div>{props.children}</div>
 
-const ThirdApp = (props) => {
-    const {history} = props;
-    return (
-        <MicroPlainHtml history={history} host="http://dev-contacts-ui.bvo.local" name="ThirdApp"/>
-    )
-};
+					</div>
 
-const FourthApp = (props) => {
-    const {history} = props;
-    return (
-        <MicroPlainHtml history={history} host="http://dev-dashboard.bvo.local" name="Dashboard"/>
-    )
-};
-
-function App() {
-    return (
-        <BrowserRouter>
-            <div className="AppRoot">
-                <AppHeader/>
-                <hr/>
-                <Switch>
-                    <Route exact path="/" render={() => <div>Hello</div>}/>
-                    <Route exact path="/first" component={FirstApp}/>
-                    <Route exact path="/second" component={SecondApp}/>
-                    <Route exact path="/third" component={ThirdApp}/>
-                    <Route exact path="/fourth" component={FourthApp}/>
-                    {/*<Redirect from="/" to="/first"/>*/}
-                </Switch>
-            </div>
-        </BrowserRouter>
-    );
+				</ThemeProvider>
+			</BrowserRouter>
+	);
 }
 
 export default App;

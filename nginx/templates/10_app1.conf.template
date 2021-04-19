@@ -1,0 +1,8 @@
+server {
+	resolver 127.0.0.11 valid=10s;
+	server_name app1.bvo.localhost;
+	location / {
+		set $backend_server ${APP1_HOST};
+		proxy_pass http://$backend_server:${APP1_PORT};
+	}
+}

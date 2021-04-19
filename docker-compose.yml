@@ -1,27 +1,72 @@
 version: '3.7'
 
+x-common-variables: &common-variables
+    KEYCLOAK_AUTH_SERVER_URL: https://sso.onesty-tech.de/auth
+    KEYCLOAK_URL: https://sso.onesty-tech.de/auth
+    KEYCLOAK_REALM: Barmenia-Develop
+    NEWSAPP_ENDPOINT_URL: https://bvo-news-test.onesty-tech.de
+    INTENTUS_ENDPOINT_URL: https://bvo-intentus-test.onesty-tech.de
+    INTENTUS_LINK_URL: https://bvo-intentus-test.onesty-tech.de
+
 services:
-#  mfe-reverse-proxy:
-#    container_name: mfe-reverse-proxy
-#    hostname: reverse-proxy
-#    image: nginx
-#    ports:
-#      - 80:80
-#      - 443:443
-#    volumes:
-#      - nginx/reverse-proxy.conf:/etc/nginx/conf.d
-  mfe-app-root:
+  #reverse proxy for portal and apps (can be combined with portal for non-development use-case)
+  proxy:
+    hostname: proxy
+    domainname: localhost
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/templates:/etc/nginx/templates
+    #*_HOST and PORT defines where the calls should go. portal/app1/app2/.. means the call go into docker-container.
+    environment:
+      #PORTAL_HOST: 192.168.2.121  #overriden to run the portal as nodejs for faster development
+      #PORTAL_PORT: 3000
+      PORTAL_HOST: portal
+      PORTAL_PORT: 80
+      APP1_HOST: app1
+      APP1_PORT: 80
+      APP2_HOST: app2
+      APP2_PORT: 80
+
+  portal:
     build: ./app-root
-    image: mfe-app-root:latest
-    ports:
-      - 3000:80
-  mfe-app-first:
+    image: portal:latest
+  app1:
     build: ./app-first
-    image: mfe-app-first:latest
-    ports:
-      - 3001:80
-  mfe-app-second:
+    image: app1:latest
+  app2:
     build: ./app-second
-    image: mfe-app-second:latest
-    ports:
-      - 3002:80
+    image: app2:latest
+
+  dashboard:
+    image: nexus-docker.onesty-tech.de/bvo-dashboard:1
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENT_ID: BVO_Dashboard
+      KEYCLOAK_CLIENT_SECRET: 9b439904-4767-4884-90ac-c5109d682f91
+
+  newsapp:
+    image: nexus-docker.onesty-tech.de/bvo-news-app:next-gen
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENT_ID: BVO_Newsapp
+      KEYCLOAK_CLIENT_SECRET: 19433ec3-36dd-453e-9c25-0b5395d0d9f9
+      MONGODB_HOST: mongodb
+
+  mongodb:
+    image: mongo
+
+  contacts-ui:
+    image: nexus-docker.onesty-tech.de/bvo-contacts-ui:next-gen
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENTID: BVO_WebpartsReact
+      REST_API_CONTACTS: https://bvo-contacts-test.onesty-tech.de
+
+  contacts-ui2:
+    image: nexus-docker.onesty-tech.de/bvo-contacts-ui:latest
+    environment:
+      <<: *common-variables
+      KEYCLOAK_CLIENTID: BVO_WebpartsReact
+      REST_API_CONTACTS: https://bvo-contacts-test.onesty-tech.de

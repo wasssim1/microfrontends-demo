@@ -8,5 +8,9 @@ module.exports = function override(config, env) {
         },
     };
 */
+    config.optimization = {
+        // temporary for debugging purpose, dont minimize our code.
+        minimize: false
+    }
     return config;
 }
